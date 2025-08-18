@@ -1,5 +1,6 @@
 package com.algaworks.algasensors.devicemanagement;
 
+import com.algaworks.algasensors.devicemanagement.common.IdGenerator;
 import io.hypersistence.tsid.TSID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
