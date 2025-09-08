@@ -1,5 +1,6 @@
 package com.algaworks.algasensors.devicemanagement.api.controller;
 
+import com.algaworks.algasensors.devicemanagement.api.client.SensorMonitoringClient;
 import com.algaworks.algasensors.devicemanagement.api.model.SensorInput;
 import com.algaworks.algasensors.devicemanagement.api.model.SensorOutput;
 import com.algaworks.algasensors.devicemanagement.common.IdGenerator;
@@ -21,6 +22,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class SensorController {
 
     private final SensorRepository sensorRepository;
+
+    private final SensorMonitoringClient sensorMonitoringClient;
 
     @GetMapping
     public Page<SensorOutput> search(@PageableDefault Pageable pageable) {
@@ -77,6 +80,8 @@ public class SensorController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sensor not found"));
 
         sensorRepository.delete(sensor);
+
+        sensorMonitoringClient.disableMonitoring(sensorId);
     }
 
     @PutMapping("/{sensorId}/enable")
@@ -87,9 +92,11 @@ public class SensorController {
 
         sensor.setEnabled(true);
         sensorRepository.saveAndFlush(sensor);
+
+        sensorMonitoringClient.enableMonitoring(sensorId);
     }
 
-    @DeleteMapping("/{sensorId}/disable")
+    @DeleteMapping("/{sensorId}/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disable(@PathVariable TSID sensorId) {
         Sensor sensor = sensorRepository.findById(new SensorId(sensorId))
@@ -97,6 +104,8 @@ public class SensorController {
 
         sensor.setEnabled(false);
         sensorRepository.saveAndFlush(sensor);
+
+        sensorMonitoringClient.disableMonitoring(sensorId);
     }
 
     private SensorOutput convertToModel(Sensor sensor) {
