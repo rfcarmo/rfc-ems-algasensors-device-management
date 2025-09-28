@@ -1,5 +1,6 @@
 package com.algaworks.algasensors.devicemanagement.api.client;
 
+import com.algaworks.algasensors.devicemanagement.api.model.SensorMonitoringOutput;
 import io.hypersistence.tsid.TSID;
 
 public interface SensorMonitoringClient {
@@ -8,4 +9,5 @@ public interface SensorMonitoringClient {
 
     void disableMonitoring(TSID sensorId);
 
+    SensorMonitoringOutput getDetails(TSID sensorId);
 }
